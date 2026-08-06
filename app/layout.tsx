@@ -34,39 +34,28 @@ const poppins = Poppins({
 
 // SEO metadata configuration
 export const metadata: Metadata = {
-  metadataBase: new URL("https://linkinbio-nextjs-ashen.vercel.app"),
-  title: "Link in Bio | Nayan Das - Portfolio & Social Links",
-  description:
-    "Crafting Code & Content for a Connected World. Explore my portfolio, latest blog posts, and connect with me across social platforms.",
-  keywords: [
-    "Nayan Das",
-    "portfolio",
-    "web developer",
-    "app developer",
-    "api developer",
-    "content creator",
-    "social links",
-    "blog",
-    "programming",
-  ],
-  authors: [{ name: "Nayan Das", url: "https://github.com/nayandas69" }],
-  creator: "Nayan Das",
-  publisher: "Nayan Das",
+  metadataBase: new URL("https://github.com/tamannaah159"),
+  title: "Link in Bio | Tamannaah - Social Links",
+  description: "Connect with Tamannaah across social platforms.",
+  keywords: ["Tamannaah", "link in bio", "social links", "GitHub", "Instagram", "YouTube", "Facebook"],
+  authors: [{ name: "Tamannaah", url: "https://github.com/tamannaah159" }],
+  creator: "Tamannaah",
+  publisher: "Tamannaah",
 
   // Open Graph metadata for social media sharing
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://linkinbio-nextjs-ashen.vercel.app",
-    title: "Link in Bio | Nayan Das",
-    description: "Crafting Code & Content for a Connected World",
-    siteName: "Nayan Das Portfolio",
+    url: "https://github.com/tamannaah159",
+    title: "Link in Bio | Tamannaah",
+    description: "Connect with Tamannaah across social platforms.",
+    siteName: "Tamannaah",
     images: [
       {
         url: "/images/profile.jpg",
         width: 1200,
         height: 630,
-        alt: "Nayan Das Profile",
+        alt: "Tamannaah",
       },
     ],
   },
@@ -74,10 +63,10 @@ export const metadata: Metadata = {
   // Twitter/X Card metadata
   twitter: {
     card: "summary_large_image",
-    title: "Link in Bio | Nayan Das",
-    description: "Crafting Code & Content for a Connected World",
+    title: "Link in Bio | Tamannaah",
+    description: "Connect with Tamannaah across social platforms.",
     images: ["/images/profile.jpg"],
-    creator: "@nayandas69",
+    creator: "@tamannaah159",
   },
 
   // Additional metadata
@@ -104,7 +93,7 @@ export const metadata: Metadata = {
   // },
 
   // App-specific metadata
-  applicationName: "Nayan Das Portfolio",
+  applicationName: "Tamannaah",
   category: "Portfolio",
 }
 
@@ -142,13 +131,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//www.youtube.com" />
         <link rel="dns-prefetch" href="//github.com" />
-        <link rel="dns-prefetch" href="//mastodon.social" />
-
-        {/* Mastodon verification */}
-        <link rel="me" href="https://mastodon.social/@nayandas" />
-
-        {/* Fediverse author attribution */}
-        <meta name="fediverse:creator" content="@nayandas@mastodon.social" />
 
         {/* Structured data for SEO */}
         <script
@@ -157,16 +139,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              name: "Nayan Das",
-              url: "https://github.com/nayandas69/linkinbio-nextjs.git",
-              sameAs: [
-                "https://github.com/nayandas69",
-                "https://youtube.com/@dasnayan69",
-                "https://patreon.com/NayanDas69",
-                "https://discord.gg/u9XfHZN8K9",
-              ],
-              jobTitle: "Web Developer & Content Creator",
-              description: "Crafting Code & Content for a Connected World",
+              name: "Tamannaah",
+              url: "https://github.com/tamannaah159",
+              sameAs: ["https://github.com/tamannaah159"],
+              description: "Connect with Tamannaah across social platforms.",
               image: "/images/profile.jpg",
             }),
           }}
