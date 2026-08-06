@@ -43,212 +43,45 @@
 
 "use client"
 
-import React from "react"
-
 import DevPopup from "@/components/dev-popup"
 import {
-  BriefcaseIcon,
-  DiscordIcon,
-  EmailIcon,
+  FacebookIcon,
   GitHubIcon,
-  PatreonIcon,
+  InstagramIcon,
   VerificationBadgeIcon,
   YouTubeIcon,
 } from "@/components/social-icons"
 import { motion } from "framer-motion"
-import { ChevronLeft, ChevronRight, Moon, Play, Settings, Sun } from "lucide-react"
+import { Moon, Settings, Sun } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
-/*
- * Extended Social Media Icons Import
- * Uncomment these imports if you want to use additional social media icons
- * Make sure to also uncomment the corresponding icons in components/social-icons.tsx
- */
-/*
-import {
-  FacebookIcon,
-  MessengerIcon,
-  SnapchatIcon,
-  TikTokIcon,
-  WhatsAppIcon,
-  BlueskyIcon,
-  MastodonIcon,
-  XIcon,
-  InstagramIcon,
-  TelegramIcon,
-  LinkedInIcon,
-  TumblrIcon,
-} from "@/components/social-icons"
-*/
-
-// Blog data type
-type Blog = {
-  id: number
-  title: string
-  description: string
-  slug: string
-  thumbnail: string | null
-  category: string
-  duration: string | null
-}
-
-// BlogPost type for API response items
-interface BlogPost {
-  readingTime?: number
-  frontmatter?: {
-    cover?: string
-    title?: string
-    description?: string
-    tags?: string[]
-  }
-  cover?: string
-  excerpt?: string
-  slug?: string
-}
-
-// Social media links configuration with custom icons (Currently showing 6 icons)
+// Social media links configuration with custom icons
 const socialLinks = [
   {
     name: "GitHub",
-    url: "https://github.com/nayandas69",
+    url: "https://github.com/tamannaah159",
     icon: GitHubIcon,
     bgColor: "bg-gray-800",
   },
   {
-    name: "Patreon",
-    url: "https://patreon.com/NayanDas69",
-    icon: PatreonIcon,
-    bgColor: "bg-orange-500",
+    name: "Instagram",
+    url: "#",
+    icon: InstagramIcon,
+    bgColor: "bg-pink-600",
   },
   {
     name: "YouTube",
-    url: "https://youtube.com/@dasnayan69",
+    url: "#",
     icon: YouTubeIcon,
     bgColor: "bg-red-600",
   },
   {
-    name: "Discord",
-    url: "https://discord.gg/u9XfHZN8K9",
-    icon: DiscordIcon,
-    bgColor: "bg-indigo-600",
-  },
-  {
-    name: "Website",
-    url: "https://blogverse-five-omega.vercel.app",
-    icon: BriefcaseIcon,
-    bgColor: "bg-emerald-600",
-  },
-  {
-    name: "Email",
-    url: "mailto:nayanchandradas@hotmail.com",
-    icon: EmailIcon,
-    bgColor: "bg-blue-600",
-  },
-  /*
-   * Extended Social Links Array
-   * Uncomment this array and replace the current socialLinks array above
-   * to use additional social media platforms. Update URLs with your actual profiles.
-   * Make sure to also uncomment the corresponding icon imports at the top of this file.
-   */
-  /*
-  {
-    name: "Instagram",
-    url: "https://instagram.com/yourusername",
-    icon: InstagramIcon,
-    color: "from-pink-500 to-rose-600",
-    hoverColor: "hover:from-pink-400 hover:to-rose-500",
-    bgColor: "bg-pink-600",
-  },
-  {
-    name: "X (Twitter)",
-    url: "https://x.com/yourusername",
-    icon: XIcon,
-    color: "from-gray-800 to-black",
-    hoverColor: "hover:from-gray-700 hover:to-gray-900",
-    bgColor: "bg-black",
-  },
-  {
-    name: "LinkedIn",
-    url: "https://linkedin.com/in/yourusername",
-    icon: LinkedInIcon,
-    color: "from-blue-600 to-blue-800",
-    hoverColor: "hover:from-blue-500 hover:to-blue-700",
-    bgColor: "bg-blue-700",
-  },
-  {
     name: "Facebook",
-    url: "https://facebook.com/yourusername",
+    url: "#",
     icon: FacebookIcon,
-    color: "from-blue-500 to-blue-700",
-    hoverColor: "hover:from-blue-400 hover:to-blue-600",
     bgColor: "bg-blue-600",
   },
-  {
-    name: "TikTok",
-    url: "https://tiktok.com/@yourusername",
-    icon: TikTokIcon,
-    color: "from-gray-900 to-black",
-    hoverColor: "hover:from-gray-800 hover:to-gray-900",
-    bgColor: "bg-gray-900",
-  },
-  {
-    name: "WhatsApp",
-    url: "https://wa.me/yourphonenumber",
-    icon: WhatsAppIcon,
-    color: "from-green-500 to-green-700",
-    hoverColor: "hover:from-green-400 hover:to-green-600",
-    bgColor: "bg-green-600",
-  },
-  {
-    name: "Telegram",
-    url: "https://t.me/yourusername",
-    icon: TelegramIcon,
-    color: "from-blue-400 to-blue-600",
-    hoverColor: "hover:from-blue-300 hover:to-blue-500",
-    bgColor: "bg-blue-500",
-  },
-  {
-    name: "Snapchat",
-    url: "https://snapchat.com/add/yourusername",
-    icon: SnapchatIcon,
-    color: "from-yellow-400 to-yellow-600",
-    hoverColor: "hover:from-yellow-300 hover:to-yellow-500",
-    bgColor: "bg-yellow-500",
-  },
-  {
-    name: "Bluesky",
-    url: "https://bsky.app/profile/yourusername",
-    icon: BlueskyIcon,
-    color: "from-sky-400 to-sky-600",
-    hoverColor: "hover:from-sky-300 hover:to-sky-500",
-    bgColor: "bg-sky-500",
-  },
-  {
-    name: "Mastodon",
-    url: "https://mastodon.social/@yourusername",
-    icon: MastodonIcon,
-    color: "from-purple-500 to-purple-700",
-    hoverColor: "hover:from-purple-400 hover:to-purple-600",
-    bgColor: "bg-purple-600",
-  },
-  {
-    name: "Tumblr",
-    url: "https://yourusername.tumblr.com",
-    icon: TumblrIcon,
-    color: "from-indigo-600 to-purple-700",
-    hoverColor: "hover:from-indigo-500 hover:to-purple-600",
-    bgColor: "bg-indigo-700",
-  },
-  {
-    name: "Messenger",
-    url: "https://m.me/yourusername",
-    icon: MessengerIcon,
-    color: "from-blue-500 to-purple-600",
-    hoverColor: "hover:from-blue-400 hover:to-purple-500",
-    bgColor: "bg-blue-600",
-  },
-*/
 ]
 
 export default function HomePage() {
@@ -256,16 +89,6 @@ export default function HomePage() {
   // Track both system theme and user override
   const [themeMode, setThemeMode] = useState<"light" | "dark" | "system">("system")
   const [systemTheme, setSystemTheme] = useState(false) // System preference (false = light, true = dark)
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [blogs, setBlogs] = useState<Blog[]>([])
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
-  const [isLoadingBlogs, setIsLoadingBlogs] = useState(true)
-
-  // Touch/swipe handling for mobile
-  const [touchStart, setTouchStart] = useState<number | null>(null)
-  const [touchEnd, setTouchEnd] = useState<number | null>(null)
-  // Minimum swipe distance (in px) to trigger slide change
-  const minSwipeDistance = 50
 
   // Computed theme: user override takes precedence, fallback to system
   const isDarkMode = themeMode === "dark" || (themeMode === "system" && systemTheme)
@@ -390,153 +213,6 @@ export default function HomePage() {
     }
   }
 
-  /**
-   * Fetch latest blogs from Blogverse API
-   * Fetches the 5 most recent blog posts on component mount
-   */
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setIsLoadingBlogs(true)
-        const response = await fetch("https://blogverse-five-omega.vercel.app/api/v1/posts/recent?limit=5", {
-          headers: {
-            Accept: "application/json",
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch blogs: ${response.status}`)
-        }
-
-        const data = await response.json()
-
-        // Handle both direct array response and wrapped response format
-        const postsArray = Array.isArray(data) ? data : data.posts || data.data || []
-
-        if (!Array.isArray(postsArray) || postsArray.length === 0) {
-          throw new Error("No blog posts found in API response")
-        }
-
-        // Transform API data to match our blog structure
-        const transformedBlogs = postsArray.map((post: BlogPost, index: number) => {
-          // Blogverse API returns readingTime as a number in minutes (not seconds)
-          const readingTimeMinutes = Math.max(1, Math.ceil(post.readingTime || 1))
-          const durationStr = `${readingTimeMinutes}m read`
-
-          // Construct full image URL if cover exists
-          let thumbnailUrl = null
-          const coverPath = post.frontmatter?.cover || post.cover
-
-          if (coverPath) {
-            // Always use absolute URL for images from Blogverse API
-            if (coverPath.startsWith("http")) {
-              // Already a full URL
-              thumbnailUrl = coverPath
-            } else if (coverPath.startsWith("/")) {
-              // Relative path starting with /
-              thumbnailUrl = `https://blogverse-five-omega.vercel.app${coverPath}`
-            } else {
-              // Relative path without /
-              thumbnailUrl = `https://blogverse-five-omega.vercel.app/${coverPath}`
-            }
-          }
-
-          return {
-            id: index + 1,
-            title: post.frontmatter?.title || "Untitled",
-            description: post.frontmatter?.description || post.excerpt || "",
-            slug: post.slug || `blog-${index}`,
-            thumbnail: thumbnailUrl,
-            category: post.frontmatter?.tags?.[0] || "General",
-            duration: durationStr,
-          }
-        })
-
-        setBlogs(transformedBlogs)
-        setCurrentSlide(0)
-      } catch (error) {
-        setBlogs([])
-      } finally {
-        setIsLoadingBlogs(false)
-      }
-    }
-
-    fetchBlogs()
-  }, [])
-
-  /**
-   * Auto-play functionality for the blog carousel
-   * Automatically advances to the next slide every 5 seconds
-   */
-  useEffect(() => {
-    if (!isAutoPlaying || blogs.length === 0) return
-
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % blogs.length)
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [isAutoPlaying, blogs.length])
-
-  /**
-   * Navigate to the next slide in the carousel
-   */
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % blogs.length)
-    setIsAutoPlaying(false) // Stop autoplay when user manually navigates
-  }
-
-  /**
-   * Navigate to the previous slide in the carousel
-   */
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + blogs.length) % blogs.length)
-    setIsAutoPlaying(false) // Stop autoplay when user manually navigates
-  }
-
-  /**
-   * Open blog in new tab
-   */
-  const openBlog = (blog: Blog) => {
-    if (blog.slug) {
-      window.open(`https://blogverse-five-omega.vercel.app/blog/${blog.slug}`, "_blank")
-    }
-  }
-
-  /**
-   * Handle touch start event for swipe detection
-   */
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null) // Reset touch end
-    setTouchStart(e.targetTouches[0].clientX)
-  }
-
-  /**
-   * Handle touch move event for swipe detection
-   */
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-  }
-
-  /**
-   * Handle touch end event and determine swipe direction
-   */
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > minSwipeDistance
-    const isRightSwipe = distance < -minSwipeDistance
-
-    if (isLeftSwipe) {
-      // Swipe left - go to next slide
-      nextSlide()
-    } else if (isRightSwipe) {
-      // Swipe right - go to previous slide
-      prevSlide()
-    }
-  }
-
   return (
     <div
       className={`min-h-screen transition-all duration-500 ${
@@ -595,35 +271,35 @@ export default function HomePage() {
           >
             {/* Profile image with hover animation */}
             <motion.div
-              className="relative mx-auto mb-4 h-20 w-20 sm:h-24 sm:w-24"
+              className="relative mx-auto mb-4 h-24 w-24 sm:h-28 sm:w-28"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
+              {/* Gradient glow ring behind the avatar */}
+              <div
+                className={`absolute -inset-1 rounded-full bg-gradient-to-tr blur-sm ${
+                  isDarkMode ? "from-purple-500 via-pink-500 to-violet-500" : "from-blue-400 via-indigo-400 to-purple-400"
+                }`}
+              />
               <Image
                 src="/images/profile.jpg"
-                alt="Nayan Das Profile Picture"
+                alt="Tamannaah profile picture"
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="rounded-full border-4 border-white/30 object-cover"
+                className="relative rounded-full border-4 border-white/60 object-cover shadow-lg"
                 priority
-              />
-              {/* Animated ring around profile image */}
-              <div
-                className={`absolute inset-0 animate-pulse rounded-full border-2 ${
-                  isDarkMode ? "border-purple-400/50" : "border-blue-400/50"
-                }`}
               />
             </motion.div>
 
             {/* Name and bio text */}
             <motion.h1
-              className={`mb-2 text-xl font-bold sm:text-2xl ${isDarkMode ? "text-white" : "text-gray-800"}`}
+              className={`mb-1 text-xl font-bold sm:text-2xl ${isDarkMode ? "text-white" : "text-gray-800"}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <span className="flex items-center justify-center gap-2">
-                Nayan Das
+                Tamannaah
                 <div className="group relative">
                   <VerificationBadgeIcon
                     size={20}
@@ -635,7 +311,7 @@ export default function HomePage() {
                       isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
                     } pointer-events-none z-20 origin-bottom scale-0 whitespace-nowrap border shadow-xl backdrop-blur-sm group-hover:scale-100`}
                   >
-                    Profile Nayan Das identity verified
+                    Identity verified
                     <div
                       className={`absolute left-1/2 top-full h-0 w-0 -translate-x-1/2 transform border-l-[4px] border-r-[4px] border-t-[4px] border-transparent ${
                         isDarkMode ? "border-t-gray-800" : "border-t-white"
@@ -646,30 +322,38 @@ export default function HomePage() {
               </span>
             </motion.h1>
             <motion.p
-              className={`px-2 text-xs opacity-80 sm:text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}
+              className={`text-xs font-medium ${isDarkMode ? "text-purple-300" : "text-indigo-500"}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+            >
+              @tamannaah159
+            </motion.p>
+            <motion.p
+              className={`mt-2 px-2 text-xs opacity-80 sm:text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              Crafting Code & Content for a Connected World
+              Creating, sharing, and connecting across the web.
             </motion.p>
           </motion.div>
 
-          {/* Social Links - Responsive 6-icon grid with proper hover */}
+          {/* Social Links */}
           <motion.div
-            className="mb-6 sm:mb-8"
+            className="mb-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <div className="mx-auto grid max-w-xs grid-cols-6 gap-2 sm:max-w-sm sm:gap-3">
+            <div className="mx-auto flex max-w-xs items-center justify-center gap-4 sm:gap-5">
               {socialLinks.map((link, index) => (
                 <motion.a
                   key={link.name}
                   href={link.url}
-                  target="_blank"
+                  target={link.url === "#" ? undefined : "_blank"}
                   rel="noopener noreferrer"
-                  className={`group relative ${link.bgColor} flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-110 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent active:translate-y-0 active:scale-95 sm:h-12 sm:w-12 md:h-14 md:w-14`}
+                  className={`group relative ${link.bgColor} flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 text-white shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-110 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-transparent active:translate-y-0 active:scale-95 sm:h-14 sm:w-14`}
                   whileHover={{
                     scale: 1.1,
                     y: -4,
@@ -685,7 +369,7 @@ export default function HomePage() {
                   transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
                   aria-label={`Visit ${link.name}`}
                 >
-                  <link.icon size={16} className="drop-shadow-sm sm:h-[18px] sm:w-[18px] md:h-[20px] md:w-[20px]" />
+                  <link.icon size={22} className="drop-shadow-sm" />
 
                   {/* Enhanced tooltip with better positioning */}
                   <div
@@ -701,200 +385,23 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          {/* Blog Section */}
+          {/* Divider */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
+            className={`mx-auto mt-6 h-px w-2/3 ${isDarkMode ? "bg-white/10" : "bg-gray-800/10"}`}
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ delay: 0.9, duration: 0.5 }}
+          />
+
+          {/* Footer */}
+          <motion.p
+            className={`mt-4 text-center text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.5 }}
           >
-            <h2
-              className={`mb-4 text-center text-lg font-semibold sm:text-xl ${isDarkMode ? "text-white" : "text-gray-800"}`}
-            >
-              Latest Blogs
-            </h2>
-
-            {/* Blog Carousel or Loading Skeleton */}
-            {isLoadingBlogs ? (
-              <div
-                className={`animate-pulse rounded-2xl border p-4 ${
-                  isDarkMode ? "border-white/10 bg-white/5" : "border-white/40 bg-white/30"
-                }`}
-              >
-                <div className={`mb-3 h-40 rounded-xl sm:h-48 ${isDarkMode ? "bg-white/10" : "bg-gray-200/60"}`} />
-                <div className={`mb-2 h-4 w-3/4 rounded ${isDarkMode ? "bg-white/10" : "bg-gray-200/60"}`} />
-                <div className={`h-3 w-1/2 rounded ${isDarkMode ? "bg-white/10" : "bg-gray-200/60"}`} />
-              </div>
-            ) : blogs.length === 0 ? (
-              <div
-                className={`rounded-2xl border p-6 text-center ${
-                  isDarkMode ? "border-white/10 bg-white/5 text-gray-400" : "border-white/40 bg-white/30 text-gray-500"
-                }`}
-              >
-                <p className="text-sm">No blog posts available.</p>
-              </div>
-            ) : (
-              <>
-                {/* Blog Carousel Container */}
-                <div
-                  className="relative overflow-hidden rounded-2xl"
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  <motion.div
-                    className="flex touch-pan-y select-none transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                    onMouseEnter={() => setIsAutoPlaying(false)}
-                    onMouseLeave={() => setIsAutoPlaying(true)}
-                  >
-                    {blogs.map((blog, index) => (
-                      <div key={blog.id} className="w-full flex-shrink-0">
-                        <motion.div
-                          className={`relative cursor-pointer overflow-hidden rounded-2xl border backdrop-blur-md ${
-                            isDarkMode
-                              ? "border-white/10 bg-white/5 hover:bg-white/10"
-                              : "border-white/40 bg-white/30 hover:bg-white/40"
-                          } transition-all duration-300`}
-                          onClick={() => openBlog(blog)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          {/* Blog thumbnail with play button overlay - only show if blog has a cover image */}
-                          {blog.thumbnail && (
-                            <div className="relative h-40 overflow-hidden sm:h-48">
-                              <Image
-                                src={blog.thumbnail}
-                                alt={blog.title}
-                                fill
-                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                priority={index === 0}
-                              />
-                              {/* Play button overlay */}
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 hover:opacity-100">
-                                <div className="rounded-full bg-white/90 p-2 sm:p-3">
-                                  <Play size={20} className="ml-1 text-gray-800 sm:h-6 sm:w-6" />
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Category badge and reading time - position changes based on thumbnail */}
-                          {blog.thumbnail && (
-                            <>
-                              <div
-                                className={`absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium sm:left-3 sm:top-3 ${
-                                  isDarkMode ? "bg-black/50 text-white" : "bg-white/80 text-gray-800"
-                                }`}
-                              >
-                                {blog.category}
-                              </div>
-                              {blog.duration && (
-                                <div
-                                  className={`absolute right-2 top-2 rounded-full px-2 py-1 text-xs font-medium sm:right-3 sm:top-3 ${
-                                    isDarkMode ? "bg-black/50 text-white" : "bg-white/80 text-gray-800"
-                                  }`}
-                                >
-                                  {blog.duration}
-                                </div>
-                              )}
-                            </>
-                          )}
-
-                          {/* Blog content */}
-                          <div className={blog.thumbnail ? "p-3 sm:p-4" : "p-4 sm:p-5"}>
-                            {/* Show badges below title when no thumbnail */}
-                            {!blog.thumbnail && (
-                              <div className="mb-2 flex flex-wrap gap-2">
-                                <span
-                                  className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
-                                    isDarkMode ? "bg-black/50 text-white" : "bg-white/80 text-gray-800"
-                                  }`}
-                                >
-                                  {blog.category}
-                                </span>
-                                {blog.duration && (
-                                  <span
-                                    className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
-                                      isDarkMode ? "bg-black/50 text-white" : "bg-white/80 text-gray-800"
-                                    }`}
-                                  >
-                                    {blog.duration}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-
-                            <h3
-                              className={`mb-2 line-clamp-2 text-sm font-semibold ${
-                                isDarkMode ? "text-white" : "text-gray-800"
-                              }`}
-                            >
-                              {blog.title}
-                            </h3>
-                            <p
-                              className={`line-clamp-2 text-xs opacity-70 ${
-                                isDarkMode ? "text-gray-300" : "text-gray-600"
-                              }`}
-                            >
-                              {blog.description}
-                            </p>
-                          </div>
-                        </motion.div>
-                      </div>
-                    ))}
-                  </motion.div>
-
-                  {/* Carousel navigation buttons */}
-                  <button
-                    onClick={prevSlide}
-                    className={`absolute left-2 top-1/2 -translate-y-1/2 transform rounded-full border p-1.5 backdrop-blur-md transition-all duration-300 sm:p-2 ${
-                      isDarkMode
-                        ? "border-white/20 bg-white/10 text-white hover:bg-white/20"
-                        : "border-white/40 bg-white/30 text-gray-800 hover:bg-white/40"
-                    }`}
-                    aria-label="Previous blog"
-                  >
-                    <ChevronLeft size={14} className="sm:h-4 sm:w-4" />
-                  </button>
-                  <button
-                    onClick={nextSlide}
-                    className={`absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full border p-1.5 backdrop-blur-md transition-all duration-300 sm:p-2 ${
-                      isDarkMode
-                        ? "border-white/20 bg-white/10 text-white hover:bg-white/20"
-                        : "border-white/40 bg-white/30 text-gray-800 hover:bg-white/40"
-                    }`}
-                    aria-label="Next blog"
-                  >
-                    <ChevronRight size={14} className="sm:h-4 sm:w-4" />
-                  </button>
-                </div>
-
-                {/* Carousel dots indicator */}
-                <div className="mt-3 flex justify-center space-x-2 sm:mt-4">
-                  {blogs.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setCurrentSlide(index)
-                        setIsAutoPlaying(false)
-                      }}
-                      className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                        index === currentSlide
-                          ? isDarkMode
-                            ? "bg-white"
-                            : "bg-gray-800"
-                          : isDarkMode
-                            ? "bg-white/30"
-                            : "bg-gray-400"
-                      }`}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </motion.div>
+            {`© ${new Date().getFullYear()} Tamannaah`}
+          </motion.p>
         </motion.div>
       </div>
 
